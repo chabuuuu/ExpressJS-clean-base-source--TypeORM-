@@ -4,13 +4,13 @@ import "reflect-metadata";
 import helmet from "helmet";
 // import { errorHanlder } from "@/middleware/error.middleware";
 import { route } from "@/routes";
-import { AppDataSource } from "@/database/db.datasource";
 import { GlobalConfig } from "@/utils/config/global-config.util";
 import cors from "cors";
 import morgan from "morgan";
 import { endRequestPipelineMiddleware } from "@/middleware/end-request-pipeline.middleware";
 import responser from "responser";
 import { globalErrorHanlder } from "@/middleware/error-handle.middleware";
+import { AppDataSourceSingleton } from "@/database/db.datasource";
 
 /**
  * Express app
@@ -50,7 +50,7 @@ app.use(endRequestPipelineMiddleware);
 /**
  * Server
  */
-AppDataSource.getInstance()
+AppDataSourceSingleton.getInstance()
   .initialize()
   .then(async () => {
     console.log("Database is connected");

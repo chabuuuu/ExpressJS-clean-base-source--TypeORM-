@@ -1,6 +1,6 @@
 import { BaseCrudController } from "@/controller/base/base-crud.controller";
 import { IBaseCrudController } from "@/controller/interfaces/i.base-curd.controller";
-import { AppDataSource } from "@/database/db.datasource";
+import { AppDataSourceSingleton } from "@/database/db.datasource";
 import { BaseRepository } from "@/repository/base/base.repository";
 import { IBaseRepository } from "@/repository/interface/i.base.repository";
 import { BaseCrudService } from "@/service/base/base.service";
@@ -19,7 +19,7 @@ export class BaseContainer {
     this.baseController = BaseContainer.get(this.model).controller;
     this.container
       .bind<DataSource>(ITYPES.Datasource)
-      .toConstantValue(AppDataSource.getInstance());
+      .toConstantValue(AppDataSourceSingleton.getInstance());
     this.container
       .bind<IBaseCrudController<any>>(ITYPES.Controller)
       .toConstantValue(this.baseController);
@@ -30,11 +30,13 @@ export class BaseContainer {
 
     container
       .bind<DataSource>(ITYPES.Datasource)
-      .toConstantValue(AppDataSource.getInstance());
+      .toConstantValue(AppDataSourceSingleton.getInstance());
 
     container
       .bind<Repository<typeof model>>(ITYPES.OrmRepository)
-      .toConstantValue(AppDataSource.getInstance().getRepository(model));
+      .toConstantValue(
+        AppDataSourceSingleton.getInstance().getRepository(model)
+      );
 
     container
       .bind<IBaseRepository<typeof model>>(ITYPES.Repository)

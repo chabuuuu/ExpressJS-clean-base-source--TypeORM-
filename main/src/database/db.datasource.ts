@@ -4,14 +4,14 @@ import { Role } from "../models/role.model";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 
-export class AppDataSource {
+export class AppDataSourceSingleton {
   private static instance: DataSource;
 
   private constructor() {}
 
   public static getInstance(): DataSource {
-    if (!AppDataSource.instance) {
-      AppDataSource.instance = new DataSource({
+    if (!AppDataSourceSingleton.instance) {
+      AppDataSourceSingleton.instance = new DataSource({
         type: "postgres",
         host: process.env.DB_HOST || "localhost",
         port: Number(process.env.DB_PORT) || 5432,
@@ -24,6 +24,8 @@ export class AppDataSource {
         migrations: [__dirname + "/migrations/*.js"],
       });
     }
-    return AppDataSource.instance;
+    return AppDataSourceSingleton.instance;
   }
 }
+
+export const AppDataSource = AppDataSourceSingleton.getInstance();
