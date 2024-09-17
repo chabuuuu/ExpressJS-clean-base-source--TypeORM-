@@ -1,6 +1,7 @@
 import { PagingDto } from "@/dto/paging.dto";
 import { Page } from "@/types/page.types";
 import { RecordOrderType } from "@/types/record-order.types";
+import { DeepPartial } from "typeorm";
 
 export interface IBaseCrudService<MODEL> {
   /**
@@ -8,7 +9,7 @@ export interface IBaseCrudService<MODEL> {
    * @param data
    * @returns The created record
    */
-  create<DTO>(payload: { data: MODEL }): Promise<MODEL>;
+  create<DTO>(payload: { data: DeepPartial<MODEL> }): Promise<MODEL>;
 
   /**
    * Find a record by the given filter and delete it

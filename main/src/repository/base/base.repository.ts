@@ -8,7 +8,7 @@ import { UpdateResultType } from "@/types/update-result.types";
 import BaseError from "@/utils/error/base.error";
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
-import { ObjectLiteral, Repository } from "typeorm";
+import { DeepPartial, ObjectLiteral, Repository } from "typeorm";
 
 @injectable()
 export class BaseRepository<T extends ObjectLiteral>
@@ -23,7 +23,7 @@ export class BaseRepository<T extends ObjectLiteral>
     this.ormRepository = ormRepository;
   }
 
-  async create(payload: { data: T }): Promise<T> {
+  async create(payload: { data: DeepPartial<T> }): Promise<T> {
     const data = payload.data;
     const result = await this.ormRepository.save(data);
     return result;

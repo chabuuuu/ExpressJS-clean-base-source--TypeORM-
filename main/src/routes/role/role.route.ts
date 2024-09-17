@@ -1,19 +1,27 @@
 import { roleController } from "@/container/role.container";
-import { CreateRoleDto } from "@/dto/request/create-role.dto";
-import { UpdateRoleDto } from "@/dto/request/update-role.dto";
+import { CreateRoleWithAccountReq } from "@/dto/role/create-role-with-account.req";
+import { CreateRoleReq } from "@/dto/role/create-role.req";
+import { UpdateRoleReq } from "@/dto/role/update-role.req";
 import { classValidate } from "@/middleware/class-validate.middleware";
 import express from "express";
 const roleRouter = express.Router();
 
 roleRouter
+
+  .post(
+    "/with-account",
+    classValidate(CreateRoleWithAccountReq),
+    roleController.createWithAccount.bind(roleController)
+  )
+
   .post(
     "/",
-    classValidate(CreateRoleDto),
+    classValidate(CreateRoleReq),
     roleController.common.create.bind(roleController.common)
   )
   .put(
     "/update/:id",
-    classValidate(UpdateRoleDto),
+    classValidate(UpdateRoleReq),
     roleController.common.update.bind(roleController.common)
   )
   .delete(

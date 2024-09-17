@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 
-export class CreateAccountResponse {
+export class CreateAccountRes {
   @Expose()
   roleId!: string;
 

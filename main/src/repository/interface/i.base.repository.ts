@@ -2,6 +2,7 @@ import { PagingDto } from "@/dto/paging.dto";
 import { DeleteResultType } from "@/types/delete-result.types";
 import { RecordOrderType } from "@/types/record-order.types";
 import { UpdateResultType } from "@/types/update-result.types";
+import { DeepPartial } from "typeorm";
 
 export interface IBaseRepository<T> {
   /**
@@ -9,7 +10,7 @@ export interface IBaseRepository<T> {
    * @param data
    * @returns The created record
    */
-  create(payload: { data: T }): Promise<T>;
+  create(payload: { data: DeepPartial<T> }): Promise<T>;
 
   /**
    * Find a record by the given filter and delete it

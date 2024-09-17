@@ -6,6 +6,7 @@ import { Page } from "@/types/page.types";
 import { RecordOrderType } from "@/types/record-order.types";
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
+import { DeepPartial } from "typeorm";
 @injectable()
 export class BaseCrudService<MODEL> implements IBaseCrudService<MODEL> {
   protected baseRepository: IBaseRepository<MODEL>;
@@ -14,7 +15,7 @@ export class BaseCrudService<MODEL> implements IBaseCrudService<MODEL> {
   ) {
     this.baseRepository = baseRepository;
   }
-  async create<DTO>(payload: { data: MODEL }): Promise<MODEL> {
+  async create<DTO>(payload: { data: DeepPartial<MODEL> }): Promise<MODEL> {
     console.log("payload", payload);
 
     return await this.baseRepository.create({

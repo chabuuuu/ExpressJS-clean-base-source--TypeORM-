@@ -4,11 +4,12 @@ import { IAccountService } from "@/service/interface/i.account.service";
 import { Account } from "@/models/account.model";
 import { IBaseCrudController } from "@/controller/interfaces/i.base-curd.controller";
 import { NextFunction, Request, Response } from "express";
-import { CreateAccountDto } from "@/dto/request/create-account.dto";
+import { CreateAccountReq } from "@/dto/account/create-account.req";
 import { convertToDto } from "@/utils/dto-convert/convert-to-dto.util";
-import { CreateAccountResponse } from "@/dto/response/create-account.response";
 import BaseError from "@/utils/error/base.error";
 import { ErrorCode } from "@/enums/error-code.enums";
+import { validateRequest } from "@/utils/validate/validate-request.util";
+import { CreateAccountRes } from "@/dto/account/create-account.res";
 
 @injectable()
 export class AccountController {
@@ -22,20 +23,32 @@ export class AccountController {
     this.common = common;
   }
 
+  /**
+   * * POST /api/account
+   * @param req
+   * @param res
+   * @param next
+   */
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      console.log("body", req.body);
+      const requestBody: CreateAccountReq = req.body;
 
       const result = await this.accountService.create({
-        data: req.body,
+        data: requestBody,
       });
-      const dtoConverted = convertToDto(CreateAccountResponse, result);
-      res.send_ok("Create new account successful", dtoConverted);
+      const responseBody = convertToDto(CreateAccountRes, result);
+      res.send_ok("Create new account successful", responseBody);
     } catch (error) {
       next(error);
     }
   }
 
+  /**
+   * * GET /api/account
+   * @param req
+   * @param res
+   * @param next
+   */
   async findOne(
     req: Request,
     res: Response,
