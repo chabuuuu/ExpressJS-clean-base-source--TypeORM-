@@ -19,7 +19,7 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check ./src",
     "prettier:fix": "prettier --write ./src",
-    "prepare": "husky"
+    "prepare": "cd .. && husky main/.husky"
   },
   "keywords": [],
   "author": "chabuuuu",
