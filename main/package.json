@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./dist && tsc && tsc-alias",
     "start:dev": "NODE_ENV=development nodemon --exec npx ts-node -r tsconfig-paths/register ./src/server.ts",
-    "start:prod": "node ./dist/server.js",
+    "start:prod": "NODE_ENV=production node ./dist/server.js",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:create": "npm run typeorm migration:create ./src/database/migrations/$npm_config_name",
     "migration:generate": "npm run build && npx typeorm migration:generate ./src/database/migrations/migrations -d ./dist/database/db.datasource.js",
