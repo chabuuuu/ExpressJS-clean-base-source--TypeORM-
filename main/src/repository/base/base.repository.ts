@@ -1,19 +1,17 @@
-import { PagingDto } from "@/dto/paging.dto";
-import { ErrorCode } from "@/enums/error-code.enums";
-import { IBaseRepository } from "@/repository/interface/i.base.repository";
-import { DeleteResultType } from "@/types/delete-result.types";
-import { ITYPES } from "@/types/interface.types";
-import { RecordOrderType } from "@/types/record-order.types";
-import { UpdateResultType } from "@/types/update-result.types";
-import BaseError from "@/utils/error/base.error";
-import { inject, injectable } from "inversify";
-import "reflect-metadata";
-import { DeepPartial, ObjectLiteral, Repository } from "typeorm";
+import { PagingDto } from '@/dto/paging.dto';
+import { ErrorCode } from '@/enums/error-code.enums';
+import { IBaseRepository } from '@/repository/interface/i.base.repository';
+import { DeleteResultType } from '@/types/delete-result.types';
+import { ITYPES } from '@/types/interface.types';
+import { RecordOrderType } from '@/types/record-order.types';
+import { UpdateResultType } from '@/types/update-result.types';
+import BaseError from '@/utils/error/base.error';
+import { inject, injectable } from 'inversify';
+import 'reflect-metadata';
+import { DeepPartial, ObjectLiteral, Repository } from 'typeorm';
 
 @injectable()
-export class BaseRepository<T extends ObjectLiteral>
-  implements IBaseRepository<T>
-{
+export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<T> {
   protected ormRepository!: Repository<T>;
 
   constructor(
@@ -32,50 +30,35 @@ export class BaseRepository<T extends ObjectLiteral>
   async findOneAndDelete(options: { filter: Partial<T> }): Promise<void> {
     const { filter } = options;
     const recordToDelete = await this.ormRepository.findOne({
-      where: filter,
+      where: filter
     });
     if (!recordToDelete) {
-      throw new BaseError(
-        ErrorCode.NF_01,
-        "Record not found with given filter: " + JSON.stringify(filter)
-      );
+      throw new BaseError(ErrorCode.NF_01, 'Record not found with given filter: ' + JSON.stringify(filter));
     }
     await this.ormRepository.remove(recordToDelete);
   }
 
-  async findOneAndUpdate(options: {
-    filter: Partial<T>;
-    updateData: Partial<T>;
-  }): Promise<void> {
+  async findOneAndUpdate(options: { filter: Partial<T>; updateData: Partial<T> }): Promise<void> {
     const { filter, updateData } = options;
 
     const recordToUpdate = await this.ormRepository.findOne({
-      where: filter,
+      where: filter
     });
     if (!recordToUpdate) {
-      throw new BaseError(
-        ErrorCode.NF_01,
-        "Record not found with given filter: " + JSON.stringify(filter)
-      );
+      throw new BaseError(ErrorCode.NF_01, 'Record not found with given filter: ' + JSON.stringify(filter));
     }
     await recordToUpdate.update(updateData);
   }
 
-  async findOne(options: {
-    filter: Partial<T>;
-    relations?: string[];
-  }): Promise<T | null> {
+  async findOne(options: { filter: Partial<T>; relations?: string[] }): Promise<T | null> {
     const { filter, relations } = options;
 
     const result = await this.ormRepository.findOne({
       where: filter,
-      relations: relations,
+      relations: relations
     });
     if (!result) {
-      throw new BaseError(
-        ErrorCode.NF_01,
-        "Record not found with given filter: " + JSON.stringify(filter)
-      );
+      throw new BaseError(ErrorCode.NF_01, 'Record not found with given filter: ' + JSON.stringify(filter));
     }
     return result;
   }
@@ -95,7 +78,7 @@ export class BaseRepository<T extends ObjectLiteral>
       take = paging.rpp;
     }
 
-    let orderObject: Record<string, "ASC" | "DESC"> = {};
+    const orderObject: Record<string, 'ASC' | 'DESC'> = {};
     if (order) {
       order.forEach((o) => {
         orderObject[o.column] = o.direction;
@@ -106,7 +89,7 @@ export class BaseRepository<T extends ObjectLiteral>
       take: take,
       skip: skip,
       order: orderObject as any,
-      relations: relations,
+      relations: relations
     });
     return result;
   }

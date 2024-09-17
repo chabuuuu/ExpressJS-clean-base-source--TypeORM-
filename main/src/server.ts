@@ -1,17 +1,16 @@
-import "dotenv/config";
-import express from "express";
-import "reflect-metadata";
-import helmet from "helmet";
-// import { errorHanlder } from "@/middleware/error.middleware";
-import { route } from "@/routes";
-import { GlobalConfig } from "@/utils/config/global-config.util";
-import cors from "cors";
-import morgan from "morgan";
-import { endRequestPipelineMiddleware } from "@/middleware/end-request-pipeline.middleware";
-import responser from "responser";
-import { globalErrorHanlder } from "@/middleware/error-handle.middleware";
-import { AppDataSourceSingleton } from "@/database/db.datasource";
-
+import 'dotenv/config';
+import express from 'express';
+import 'reflect-metadata';
+import helmet from 'helmet';
+import { route } from '@/routes';
+import { GlobalConfig } from '@/utils/config/global-config.util';
+import cors from 'cors';
+import morgan from 'morgan';
+import { endRequestPipelineMiddleware } from '@/middleware/end-request-pipeline.middleware';
+import responser from 'responser';
+import { globalErrorHanlder } from '@/middleware/error-handle.middleware';
+import { AppDataSourceSingleton } from '@/database/db.datasource';
+import chalk from 'chalk';
 /**
  * Express app
  */
@@ -22,11 +21,11 @@ const app = express();
  */
 app.use(
   express.urlencoded({
-    extended: true,
+    extended: true
   })
 );
 app.use(express.json());
-app.use(morgan(GlobalConfig.morgan.format || "dev"));
+app.use(morgan(GlobalConfig.morgan.format || 'dev'));
 app.use(cors(GlobalConfig.cors));
 if (GlobalConfig.helmet.enable) {
   app.use(helmet());
@@ -53,12 +52,10 @@ app.use(endRequestPipelineMiddleware);
 AppDataSourceSingleton.getInstance()
   .initialize()
   .then(async () => {
-    console.log("Database is connected");
+    console.log(chalk.green('Database connected'));
     const port = GlobalConfig.server.port || 3000;
     app.listen(port, () => {
-      console.log(
-        `Server is running on http://localhost:${port} in ${GlobalConfig.enviroment} mode`
-      );
+      console.log(chalk.green(`Server is running on http://localhost:${port} in ${GlobalConfig.enviroment} mode`));
     });
   })
   .catch((error) => {

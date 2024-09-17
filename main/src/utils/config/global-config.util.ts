@@ -1,5 +1,5 @@
-import config from "config";
-import cors from "cors";
+import config from 'config';
+import cors from 'cors';
 
 export class GlobalConfig {
   /**
@@ -13,7 +13,7 @@ export class GlobalConfig {
     port: number;
     host: string;
     api_version: string;
-  } = config.get("server");
+  } = config.get('server');
 
   /**
    * * Request limit config
@@ -22,7 +22,7 @@ export class GlobalConfig {
    */
   static request_limit: {
     limit: string;
-  } = config.get("request_limit");
+  } = config.get('request_limit');
 
   //Cors config
   /**
@@ -32,7 +32,7 @@ export class GlobalConfig {
    * + methods: methods of request, ex: ["GET", "POST"]
    * + allowedHeaders: allowed headers of request, ex: ["Content-Type", "Authorization"]
    */
-  static cors: cors.CorsOptions = config.get("cors");
+  static cors: cors.CorsOptions = config.get('cors');
 
   //Helmet config
   /**
@@ -42,13 +42,13 @@ export class GlobalConfig {
    */
   static helmet: {
     enable: boolean;
-  } = config.get("helmet");
+  } = config.get('helmet');
 
   /**
    * * Enviroment config
    * Get the enviroment of the server, ex: development, production
    */
-  static enviroment: string = config.get("enviroment");
+  static enviroment: string = config.get('enviroment');
 
   /**
    * * Morgan config
@@ -57,7 +57,7 @@ export class GlobalConfig {
    */
   static morgan: {
     format: string;
-  } = config.get("morgan");
+  } = config.get('morgan');
 
   /**
    * * Swagger config
@@ -66,7 +66,7 @@ export class GlobalConfig {
    */
   static swagger = config.get<{
     enable: boolean;
-  }>("swagger");
+  }>('swagger');
 
   /**
    * * Database config
@@ -74,5 +74,5 @@ export class GlobalConfig {
    */
   static database = config.get<{
     sync: boolean;
-  }>("database");
+  }>('database');
 }

@@ -1,8 +1,8 @@
-import { PagingDto } from "@/dto/paging.dto";
-import { DeleteResultType } from "@/types/delete-result.types";
-import { RecordOrderType } from "@/types/record-order.types";
-import { UpdateResultType } from "@/types/update-result.types";
-import { DeepPartial } from "typeorm";
+import { PagingDto } from '@/dto/paging.dto';
+import { DeleteResultType } from '@/types/delete-result.types';
+import { RecordOrderType } from '@/types/record-order.types';
+import { UpdateResultType } from '@/types/update-result.types';
+import { DeepPartial } from 'typeorm';
 
 export interface IBaseRepository<T> {
   /**
@@ -25,20 +25,14 @@ export interface IBaseRepository<T> {
    * @param updateData
    * @returns The updated success message
    */
-  findOneAndUpdate(options: {
-    filter: Partial<T>;
-    updateData: Partial<T>;
-  }): Promise<void>;
+  findOneAndUpdate(options: { filter: Partial<T>; updateData: Partial<T> }): Promise<void>;
 
   /**
    * Find a record by the given filter
    * @param filter
    * @returns The record with given filter
    */
-  findOne(options: {
-    filter: Partial<T>;
-    relations?: string[];
-  }): Promise<T | null>;
+  findOne(options: { filter: Partial<T>; relations?: string[] }): Promise<T | null>;
 
   /**
    * Find all records by the given filter

@@ -1,7 +1,8 @@
-import { PagingDto } from "@/dto/paging.dto";
-import { Page } from "@/types/page.types";
-import { RecordOrderType } from "@/types/record-order.types";
-import { DeepPartial } from "typeorm";
+import { PagingResponseDto } from '@/dto/paging-response.dto';
+import { PagingDto } from '@/dto/paging.dto';
+import { Page } from '@/types/page.types';
+import { RecordOrderType } from '@/types/record-order.types';
+import { DeepPartial } from 'typeorm';
 
 export interface IBaseCrudService<MODEL> {
   /**
@@ -24,10 +25,7 @@ export interface IBaseCrudService<MODEL> {
    * @param updateData
    * @returns The updated success message
    */
-  findOneAndUpdate(options: {
-    filter: Partial<MODEL>;
-    updateData: Partial<MODEL>;
-  }): Promise<void>;
+  findOneAndUpdate(options: { filter: Partial<MODEL>; updateData: Partial<MODEL> }): Promise<void>;
 
   /**
    * Find all records
@@ -51,10 +49,7 @@ export interface IBaseCrudService<MODEL> {
    * @param filter
    * @returns The record with given filter
    */
-  findOne(options: {
-    filter: Partial<MODEL>;
-    relations?: string[];
-  }): Promise<MODEL | null>;
+  findOne(options: { filter: Partial<MODEL>; relations?: string[] }): Promise<MODEL | null>;
 
   /**
    * Find all with paging and order
@@ -62,17 +57,14 @@ export interface IBaseCrudService<MODEL> {
    * @param order
    * @returns MODEL[]
    */
-  findAllWithPagingAndOrder(options: {
-    paging: PagingDto;
-    order: RecordOrderType;
-  }): Promise<Page<MODEL>>;
+  findAllWithPagingAndOrder(options: { paging: PagingDto; order: RecordOrderType }): Promise<PagingResponseDto<MODEL>>;
 
   /**
    * Find all with paging
    * @param requestPageable
    * @returns MODEL[]
    */
-  findAllWithPaging(options: { paging: PagingDto }): Promise<Page<MODEL>>;
+  findAllWithPaging(options: { paging: PagingDto }): Promise<PagingResponseDto<MODEL>>;
 
   /**
    * Count records by the given filter

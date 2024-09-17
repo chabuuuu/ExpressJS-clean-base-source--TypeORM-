@@ -1,18 +1,11 @@
-import { Role } from "@/models/role.model";
-import { injectable } from "inversify";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Role } from '@/models/role.model';
+import { injectable } from 'inversify';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @injectable()
 @Entity()
 export class Account {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @ManyToOne(() => Role, (role) => role.accounts)
@@ -21,22 +14,22 @@ export class Account {
   @Column()
   roleId!: string;
 
-  @Column("varchar", { length: 30 })
+  @Column('varchar', { length: 30 })
   email!: string;
 
-  @Column("varchar", { length: 20 })
+  @Column('varchar', { length: 20 })
   password!: string;
 
-  @Column("varchar", { length: 30 })
+  @Column('varchar', { length: 30 })
   fullname!: string;
 
-  @Column("varchar", { length: 150 })
+  @Column('varchar', { length: 150 })
   address!: string;
 
-  @Column("varchar", { length: 15 })
+  @Column('varchar', { length: 15 })
   phone_number!: string;
 
-  @Column("date")
+  @Column('date')
   birthday!: Date;
 
   @CreateDateColumn()

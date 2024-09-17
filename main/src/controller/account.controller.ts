@@ -1,22 +1,22 @@
-import { inject, injectable } from "inversify";
-import { ITYPES } from "@/types/interface.types";
-import { IAccountService } from "@/service/interface/i.account.service";
-import { Account } from "@/models/account.model";
-import { IBaseCrudController } from "@/controller/interfaces/i.base-curd.controller";
-import { NextFunction, Request, Response } from "express";
-import { CreateAccountReq } from "@/dto/account/create-account.req";
-import { convertToDto } from "@/utils/dto-convert/convert-to-dto.util";
-import BaseError from "@/utils/error/base.error";
-import { ErrorCode } from "@/enums/error-code.enums";
-import { validateRequest } from "@/utils/validate/validate-request.util";
-import { CreateAccountRes } from "@/dto/account/create-account.res";
+import { inject, injectable } from 'inversify';
+import { ITYPES } from '@/types/interface.types';
+import { IAccountService } from '@/service/interface/i.account.service';
+import { Account } from '@/models/account.model';
+import { IBaseCrudController } from '@/controller/interfaces/i.base-curd.controller';
+import { NextFunction, Request, Response } from 'express';
+import { CreateAccountReq } from '@/dto/account/create-account.req';
+import { convertToDto } from '@/utils/dto-convert/convert-to-dto.util';
+import BaseError from '@/utils/error/base.error';
+import { ErrorCode } from '@/enums/error-code.enums';
+import { validateRequest } from '@/utils/validate/validate-request.util';
+import { CreateAccountRes } from '@/dto/account/create-account.res';
 
 @injectable()
 export class AccountController {
   public common: IBaseCrudController<Account>;
   private accountService: IAccountService<Account>;
   constructor(
-    @inject("AccountService") accountService: IAccountService<Account>,
+    @inject('AccountService') accountService: IAccountService<Account>,
     @inject(ITYPES.Controller) common: IBaseCrudController<any>
   ) {
     this.accountService = accountService;
@@ -34,10 +34,10 @@ export class AccountController {
       const requestBody: CreateAccountReq = req.body;
 
       const result = await this.accountService.create({
-        data: requestBody,
+        data: requestBody
       });
       const responseBody = convertToDto(CreateAccountRes, result);
-      res.send_ok("Create new account successful", responseBody);
+      res.send_ok('Create new account successful', responseBody);
     } catch (error) {
       next(error);
     }
@@ -49,20 +49,15 @@ export class AccountController {
    * @param res
    * @param next
    */
-  async findOne(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
+  async findOne(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      if (!req.params.id)
-        throw new BaseError(ErrorCode.NF_01, "Id is required");
+      if (!req.params.id) throw new BaseError(ErrorCode.NF_01, 'Id is required');
       const id = req.params.id;
       const result = await this.accountService.findOne({
         filter: { id: id },
-        relations: ["role"],
+        relations: ['role']
       });
-      res.send_ok("Found successfully", result);
+      res.send_ok('Found successfully', result);
     } catch (error) {
       next(error);
     }

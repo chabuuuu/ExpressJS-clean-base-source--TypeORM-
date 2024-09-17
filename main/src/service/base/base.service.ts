@@ -1,39 +1,35 @@
-import { PagingDto } from "@/dto/paging.dto";
-import { IBaseRepository } from "@/repository/interface/i.base.repository";
-import { IBaseCrudService } from "@/service/interface/i.base.service";
-import { ITYPES } from "@/types/interface.types";
-import { Page } from "@/types/page.types";
-import { RecordOrderType } from "@/types/record-order.types";
-import { inject, injectable } from "inversify";
-import "reflect-metadata";
-import { DeepPartial } from "typeorm";
+import { PagingResponseDto } from '@/dto/paging-response.dto';
+import { PagingDto } from '@/dto/paging.dto';
+import { IBaseRepository } from '@/repository/interface/i.base.repository';
+import { IBaseCrudService } from '@/service/interface/i.base.service';
+import { ITYPES } from '@/types/interface.types';
+import { Page } from '@/types/page.types';
+import { RecordOrderType } from '@/types/record-order.types';
+import { inject, injectable } from 'inversify';
+import 'reflect-metadata';
+import { DeepPartial } from 'typeorm';
 @injectable()
 export class BaseCrudService<MODEL> implements IBaseCrudService<MODEL> {
   protected baseRepository: IBaseRepository<MODEL>;
-  constructor(
-    @inject(ITYPES.Repository) baseRepository: IBaseRepository<MODEL>
-  ) {
+  constructor(@inject(ITYPES.Repository) baseRepository: IBaseRepository<MODEL>) {
     this.baseRepository = baseRepository;
   }
   async create<DTO>(payload: { data: DeepPartial<MODEL> }): Promise<MODEL> {
-    console.log("payload", payload);
+    console.log('payload', payload);
 
     return await this.baseRepository.create({
-      data: payload.data,
+      data: payload.data
     });
   }
   async findOneAndDelete(options: { filter: Partial<MODEL> }): Promise<void> {
     return await this.baseRepository.findOneAndDelete({
-      filter: options.filter,
+      filter: options.filter
     });
   }
-  async findOneAndUpdate(options: {
-    filter: Partial<MODEL>;
-    updateData: Partial<MODEL>;
-  }): Promise<void> {
+  async findOneAndUpdate(options: { filter: Partial<MODEL>; updateData: Partial<MODEL> }): Promise<void> {
     return await this.baseRepository.findOneAndUpdate({
       filter: options.filter,
-      updateData: options.updateData,
+      updateData: options.updateData
     });
   }
   async findAll(): Promise<MODEL[]> {
@@ -48,42 +44,37 @@ export class BaseCrudService<MODEL> implements IBaseCrudService<MODEL> {
     return await this.baseRepository.findMany(options);
   }
 
-  async findOne(options: {
-    filter: Partial<MODEL>;
-    relations?: string[];
-  }): Promise<MODEL | null> {
+  async findOne(options: { filter: Partial<MODEL>; relations?: string[] }): Promise<MODEL | null> {
     return await this.baseRepository.findOne(options);
   }
   async findAllWithPagingAndOrder(options: {
     paging: PagingDto;
     order: RecordOrderType;
-  }): Promise<Page<MODEL>> {
+  }): Promise<PagingResponseDto<MODEL>> {
     const contents = await this.baseRepository.findMany({
       paging: options.paging,
-      order: [options.order],
+      order: [options.order]
     });
 
     const totalRecords = await this.baseRepository.count({
-      filter: {},
+      filter: {}
     });
     return {
-      content: contents,
-      totalElements: totalRecords,
+      items: contents,
+      total: totalRecords
     };
   }
 
-  async findAllWithPaging(options: {
-    paging: PagingDto;
-  }): Promise<Page<MODEL>> {
+  async findAllWithPaging(options: { paging: PagingDto }): Promise<PagingResponseDto<MODEL>> {
     const contents = await this.baseRepository.findMany({
-      paging: options.paging,
+      paging: options.paging
     });
     const totalRecords = await this.baseRepository.count({
-      filter: {},
+      filter: {}
     });
     return {
-      content: contents,
-      totalElements: totalRecords,
+      items: contents,
+      total: totalRecords
     };
   }
 

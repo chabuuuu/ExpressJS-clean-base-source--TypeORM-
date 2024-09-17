@@ -1,4 +1,4 @@
 export type RecordOrderType = {
   column: string;
-  direction: "ASC" | "DESC";
+  direction: 'ASC' | 'DESC';
 };

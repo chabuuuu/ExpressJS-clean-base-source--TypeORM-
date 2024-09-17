@@ -1,9 +1,4 @@
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsString,
-  IsStrongPassword,
-} from "class-validator";
+import { IsDateString, IsNotEmpty, IsString, IsStrongPassword } from 'class-validator';
 
 export class CreateAccountReq {
   @IsNotEmpty()
