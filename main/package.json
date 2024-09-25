@@ -19,7 +19,8 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check ./src",
     "prettier:fix": "prettier --write ./src",
-    "prepare": "husky"
+    "prepare": "cd .. && husky main/.husky",
+    "create:module": "ts-node ./src/utils/tools/auto-generate-module.ts"
   },
   "keywords": [],
   "author": "chabuuuu",
@@ -59,7 +60,7 @@
     "nodemon": "^3.1.0",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
-    "responser": "^2.5.6",
+    "response-formater": "^1.0.2",
     "typeorm": "^0.3.20"
   }
 }

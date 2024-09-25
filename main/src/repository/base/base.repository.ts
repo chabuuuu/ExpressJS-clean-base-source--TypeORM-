@@ -8,7 +8,7 @@ import { UpdateResultType } from '@/types/update-result.types';
 import BaseError from '@/utils/error/base.error';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { DeepPartial, ObjectLiteral, Repository } from 'typeorm';
+import { DeepPartial, IsNull, ObjectLiteral, Repository } from 'typeorm';
 
 @injectable()
 export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<T> {
@@ -35,23 +35,36 @@ export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<
     if (!recordToDelete) {
       throw new BaseError(ErrorCode.NF_01, 'Record not found with given filter: ' + JSON.stringify(filter));
     }
-    await this.ormRepository.remove(recordToDelete);
+    (recordToDelete as any).deleteAt = new Date();
+    await this.ormRepository.save(recordToDelete);
   }
 
   async findOneAndUpdate(options: { filter: Partial<T>; updateData: Partial<T> }): Promise<void> {
     const { filter, updateData } = options;
 
+    if (filter && !filter.deleteAt) {
+      (filter as any).deleteAt = IsNull();
+    }
+
     const recordToUpdate = await this.ormRepository.findOne({
       where: filter
     });
+
     if (!recordToUpdate) {
       throw new BaseError(ErrorCode.NF_01, 'Record not found with given filter: ' + JSON.stringify(filter));
     }
-    await recordToUpdate.update(updateData);
+
+    const primaryKey = await this.ormRepository.getId(recordToUpdate);
+
+    await this.ormRepository.update(primaryKey, updateData);
   }
 
   async findOne(options: { filter: Partial<T>; relations?: string[] }): Promise<T | null> {
     const { filter, relations } = options;
+
+    if (!filter.deleteAt) {
+      (filter as any).deleteAt = IsNull();
+    }
 
     const result = await this.ormRepository.findOne({
       where: filter,
@@ -69,13 +82,24 @@ export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<
     order?: RecordOrderType[];
     relations?: string[];
   }): Promise<T[]> {
-    const { filter, paging, order, relations } = options;
+    const { paging, order, relations } = options;
+    let { filter } = options;
 
     let skip = undefined;
     let take = undefined;
     if (paging) {
       skip = (paging.page - 1) * paging.page;
       take = paging.rpp;
+    }
+
+    if (filter && !filter.deleteAt) {
+      (filter as any).deleteAt = IsNull();
+    }
+
+    if (!filter) {
+      (filter as any) = {
+        deleteAt: IsNull()
+      };
     }
 
     const orderObject: Record<string, 'ASC' | 'DESC'> = {};
@@ -95,19 +119,44 @@ export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<
   }
 
   async findAll(): Promise<T[]> {
-    return await this.ormRepository.find();
+    const filter: Partial<T> = {};
+    (filter as any).deleteAt = IsNull();
+
+    return await this.ormRepository.find({
+      where: filter
+    });
   }
 
   async count(options: { filter?: Partial<T> }): Promise<number> {
     const { filter } = options;
 
-    return await this.ormRepository.count(filter);
+    if (filter && !filter.deleteAt) {
+      (filter as any).deleteAt = IsNull();
+    }
+
+    if (!filter) {
+      (filter as any) = {
+        deleteAt: IsNull()
+      };
+    }
+
+    console.log('count filter', filter);
+
+    return await this.ormRepository.count({
+      where: filter
+    });
   }
 
   async exists(options: { filter: Partial<T> }): Promise<boolean> {
     const { filter } = options;
 
-    const total = await this.ormRepository.count(filter);
+    if (filter && !filter.deleteAt) {
+      (filter as any).deleteAt = IsNull();
+    }
+
+    const total = await this.ormRepository.count({
+      where: filter
+    });
     return total > 0;
   }
 }

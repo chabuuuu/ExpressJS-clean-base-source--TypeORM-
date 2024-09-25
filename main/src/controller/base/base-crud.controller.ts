@@ -2,7 +2,7 @@ import { IBaseCrudController } from '@/controller/interfaces/i.base-curd.control
 import { PagingDto } from '@/dto/paging.dto';
 import { ErrorCode } from '@/enums/error-code.enums';
 import { IBaseCrudService } from '@/service/interface/i.base.service';
-import { BaseModelType } from '@/types/base-moedl.types';
+import { BaseModelType } from '@/types/base-model.types';
 import { ITYPES } from '@/types/interface.types';
 import { Page } from '@/types/page.types';
 import BaseError from '@/utils/error/base.error';

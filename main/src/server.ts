@@ -7,10 +7,10 @@ import { GlobalConfig } from '@/utils/config/global-config.util';
 import cors from 'cors';
 import morgan from 'morgan';
 import { endRequestPipelineMiddleware } from '@/middleware/end-request-pipeline.middleware';
-import responser from 'responser';
 import { globalErrorHanlder } from '@/middleware/error-handle.middleware';
 import { AppDataSourceSingleton } from '@/database/db.datasource';
 import chalk from 'chalk';
+import responseFormater from 'response-formater';
 /**
  * Express app
  */
@@ -30,7 +30,7 @@ app.use(cors(GlobalConfig.cors));
 if (GlobalConfig.helmet.enable) {
   app.use(helmet());
 }
-app.use(responser);
+app.use(responseFormater);
 
 /**
  * Routes

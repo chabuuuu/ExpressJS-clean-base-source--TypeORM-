@@ -1,5 +1,5 @@
 import { IBaseCrudService } from '@/service/interface/i.base.service';
-import { BaseModelType } from '@/types/base-moedl.types';
+import { BaseModelType } from '@/types/base-model.types';
 import { Page } from '@/types/page.types';
 import { NextFunction, Request, Response } from 'express';
 

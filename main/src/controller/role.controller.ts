@@ -1,5 +1,4 @@
 import { IBaseCrudController } from '@/controller/interfaces/i.base-curd.controller';
-import { CreateAccountRes } from '@/dto/account/create-account.res';
 import { CreateRoleWithAccountReq } from '@/dto/role/create-role-with-account.req';
 import { CreateRoleWithAccountRes } from '@/dto/role/create-role-with-account.res';
 import { Role } from '@/models/role.model';
@@ -13,10 +12,10 @@ export class RoleController {
   public common: IBaseCrudController<Role>;
   private roleService: IRoleService<Role>;
   constructor(
-    @inject('RoleService') service: IRoleService<Role>,
+    @inject('RoleService') roleService: IRoleService<Role>,
     @inject(ITYPES.Controller) common: IBaseCrudController<Role>
   ) {
-    this.roleService = service;
+    this.roleService = roleService;
     this.common = common;
   }
 
