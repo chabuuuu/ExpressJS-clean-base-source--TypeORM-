@@ -1,6 +1,6 @@
 import { ErrorCode } from '@/enums/error-code.enums';
-import accountRouter from '@/routes/account/account.route';
-import roleRouter from '@/routes/role/role.route';
+import accountRouter from '@/routes/account.route';
+import roleRouter from '@/routes/role.route';
 import BaseError from '@/utils/error/base.error';
 
 export function route(app: any, root_api: string) {

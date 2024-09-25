@@ -60,7 +60,7 @@
     "nodemon": "^3.1.0",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
-    "responser": "^2.5.6",
+    "response-formater": "^1.0.2",
     "typeorm": "^0.3.20"
   }
 }
