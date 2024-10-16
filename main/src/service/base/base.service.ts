@@ -3,20 +3,17 @@ import { PagingDto } from '@/dto/paging.dto';
 import { IBaseRepository } from '@/repository/interface/i.base.repository';
 import { IBaseCrudService } from '@/service/interface/i.base.service';
 import { ITYPES } from '@/types/interface.types';
-import { Page } from '@/types/page.types';
 import { RecordOrderType } from '@/types/record-order.types';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, FindOptionsSelect } from 'typeorm';
 @injectable()
 export class BaseCrudService<MODEL> implements IBaseCrudService<MODEL> {
   protected baseRepository: IBaseRepository<MODEL>;
   constructor(@inject(ITYPES.Repository) baseRepository: IBaseRepository<MODEL>) {
     this.baseRepository = baseRepository;
   }
-  async create<DTO>(payload: { data: DeepPartial<MODEL> }): Promise<MODEL> {
-    console.log('payload', payload);
-
+  async create(payload: { data: DeepPartial<MODEL> }): Promise<MODEL> {
     return await this.baseRepository.create({
       data: payload.data
     });
@@ -40,11 +37,16 @@ export class BaseCrudService<MODEL> implements IBaseCrudService<MODEL> {
     paging?: PagingDto;
     order?: RecordOrderType[];
     relations?: string[];
+    select?: FindOptionsSelect<MODEL>;
   }): Promise<MODEL[]> {
     return await this.baseRepository.findMany(options);
   }
 
-  async findOne(options: { filter: Partial<MODEL>; relations?: string[] }): Promise<MODEL | null> {
+  async findOne(options: {
+    filter: Partial<MODEL>;
+    relations?: string[];
+    select?: FindOptionsSelect<MODEL>;
+  }): Promise<MODEL | null> {
     return await this.baseRepository.findOne(options);
   }
   async findAllWithPagingAndOrder(options: {
@@ -65,9 +67,15 @@ export class BaseCrudService<MODEL> implements IBaseCrudService<MODEL> {
     };
   }
 
-  async findAllWithPaging(options: { paging: PagingDto }): Promise<PagingResponseDto<MODEL>> {
+  async findAllWithPaging(options: {
+    paging: PagingDto;
+    select?: FindOptionsSelect<MODEL>;
+    relations?: string[];
+  }): Promise<PagingResponseDto<MODEL>> {
     const contents = await this.baseRepository.findMany({
-      paging: options.paging
+      paging: options.paging,
+      select: options.select,
+      relations: options.relations
     });
     const totalRecords = await this.baseRepository.count({
       filter: {}
