@@ -1,14 +1,12 @@
 import { PagingDto } from '@/dto/paging.dto';
 import { ErrorCode } from '@/enums/error-code.enums';
 import { IBaseRepository } from '@/repository/interface/i.base.repository';
-import { DeleteResultType } from '@/types/delete-result.types';
 import { ITYPES } from '@/types/interface.types';
 import { RecordOrderType } from '@/types/record-order.types';
-import { UpdateResultType } from '@/types/update-result.types';
 import BaseError from '@/utils/error/base.error';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
-import { DeepPartial, IsNull, ObjectLiteral, Repository } from 'typeorm';
+import { DeepPartial, FindOptionsSelect, IsNull, ObjectLiteral, Repository } from 'typeorm';
 
 @injectable()
 export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<T> {
@@ -59,8 +57,12 @@ export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<
     await this.ormRepository.update(primaryKey, updateData);
   }
 
-  async findOne(options: { filter: Partial<T>; relations?: string[] }): Promise<T | null> {
-    const { filter, relations } = options;
+  async findOne(options: {
+    filter: Partial<T>;
+    relations?: string[];
+    select?: FindOptionsSelect<T>;
+  }): Promise<T | null> {
+    const { filter, relations, select } = options;
 
     if (!filter.deleteAt) {
       (filter as any).deleteAt = IsNull();
@@ -68,11 +70,10 @@ export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<
 
     const result = await this.ormRepository.findOne({
       where: filter,
-      relations: relations
+      relations: relations,
+      select: select
     });
-    if (!result) {
-      throw new BaseError(ErrorCode.NF_01, 'Record not found with given filter: ' + JSON.stringify(filter));
-    }
+
     return result;
   }
 
@@ -81,8 +82,9 @@ export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<
     paging?: PagingDto;
     order?: RecordOrderType[];
     relations?: string[];
+    select?: FindOptionsSelect<T>;
   }): Promise<T[]> {
-    const { paging, order, relations } = options;
+    const { paging, order, relations, select } = options;
     let { filter } = options;
 
     let skip = undefined;
@@ -113,7 +115,8 @@ export class BaseRepository<T extends ObjectLiteral> implements IBaseRepository<
       take: take,
       skip: skip,
       order: orderObject as any,
-      relations: relations
+      relations: relations,
+      select: select
     });
     return result;
   }

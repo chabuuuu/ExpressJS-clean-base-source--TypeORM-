@@ -2,7 +2,7 @@ import { PagingDto } from '@/dto/paging.dto';
 import { DeleteResultType } from '@/types/delete-result.types';
 import { RecordOrderType } from '@/types/record-order.types';
 import { UpdateResultType } from '@/types/update-result.types';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, FindOptionsSelect } from 'typeorm';
 
 export interface IBaseRepository<T> {
   /**
@@ -28,15 +28,23 @@ export interface IBaseRepository<T> {
   findOneAndUpdate(options: { filter: Partial<T>; updateData: Partial<T> }): Promise<void>;
 
   /**
-   * Find a record by the given filter
-   * @param filter
-   * @returns The record with given filter
+   * Finds a single entity that matches the given filter options.
+   *
+   * @param options - The options to filter the entity.
+   * @param options.filter - Partial object to filter the entity.
+   * @param options.relations - Optional array of relations to include.
+   * @param options.select - Optional fields to select.
+   * @returns A promise that resolves to the found entity or null if no entity matches the filter.
    */
-  findOne(options: { filter: Partial<T>; relations?: string[] }): Promise<T | null>;
+  findOne(options: { filter: Partial<T>; relations?: string[]; select?: FindOptionsSelect<T> }): Promise<T | null>;
 
   /**
    * Find all records by the given filter
-   * @param filter
+   * @param filter The filter to find records
+   * @param paging The paging options
+   * @param order The order options
+   * @param relations The relations to include
+   * @param select The select options
    * @returns The records with given filter
    */
   findMany(options: {
@@ -44,6 +52,7 @@ export interface IBaseRepository<T> {
     paging?: PagingDto;
     order?: RecordOrderType[];
     relations?: string[];
+    select?: FindOptionsSelect<T>;
   }): Promise<T[]>;
 
   /**

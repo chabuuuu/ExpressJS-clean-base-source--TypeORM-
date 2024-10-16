@@ -54,6 +54,16 @@ npm run migration:run
 - 5. Combine all to container in src/container
 - 6. Create new route in src/route
 
+## Quickly create new api:
+
+```
+npm run create:module
+```
+
+This will automatically create all these component: service, controller, router, container, repository and their interfaces.
+
+- Please make sure that you already create the model in the ./src/model for the api you want to create
+
 ### Lint source
 
 ```
