@@ -6,6 +6,13 @@ import { DeepPartial, FindOptionsSelect } from 'typeorm';
 
 export interface IBaseRepository<T> {
   /**
+   * Save a record
+   * @param data
+   * @returns The saved record
+   */
+  save(data: T): Promise<T>;
+
+  /**
    * Create a new record with the given data
    * @param data
    * @returns The created record
