@@ -63,6 +63,19 @@ export interface IBaseCrudService<MODEL> {
   }): Promise<MODEL | null>;
 
   /**
+   * Find all records by the given filter with paging
+   * @param filter
+   * @returns The records with given filter
+   */
+  findWithPaging(options: {
+    filter?: Partial<MODEL>;
+    paging?: PagingDto;
+    order?: RecordOrderType[];
+    relations?: string[];
+    select?: FindOptionsSelect<MODEL>;
+  }): Promise<PagingResponseDto<MODEL>>;
+
+  /**
    * Find all with paging and order
    * @param paging The paging options
    * @param order The order options

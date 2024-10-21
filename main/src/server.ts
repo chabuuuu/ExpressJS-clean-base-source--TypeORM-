@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import 'reflect-metadata';
 import helmet from 'helmet';
-import { route } from '@/routes';
+import { route } from '@/routes/main';
 import { GlobalConfig } from '@/utils/config/global-config.util';
 import cors from 'cors';
 import morgan from 'morgan';

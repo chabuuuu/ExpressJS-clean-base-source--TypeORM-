@@ -102,15 +102,17 @@ this.container.bind<${ModuleInPascal}Controller>(${ModuleInPascal}Controller).to
 }
 
 export() {
-const ${moduleInCamelCase}Controller = this.container.get<${ModuleInPascal}Controller>(${ModuleInPascal}Controller);
+    const ${moduleInCamelCase}Controller = this.container.get<${ModuleInPascal}Controller>(${ModuleInPascal}Controller);
     const ${moduleInCamelCase}Service = this.container.get<I${ModuleInPascal}Service<any>>('${ModuleInPascal}Service');
-return { ${moduleInCamelCase}Controller, ${moduleInCamelCase}Service };
+    const ${moduleInCamelCase}Repository = this.container.get<I${ModuleInPascal}Repository<any>>('${ModuleInPascal}Repository');
+
+return { ${moduleInCamelCase}Controller, ${moduleInCamelCase}Service, ${moduleInCamelCase}Repository };
 }
 }
 
 const ${moduleInCamelCase}Container = new ${ModuleInPascal}Container();
-const { ${moduleInCamelCase}Controller, ${moduleInCamelCase}Service } = ${moduleInCamelCase}Container.export();
-export { ${moduleInCamelCase}Controller, ${moduleInCamelCase}Service };
+const { ${moduleInCamelCase}Controller, ${moduleInCamelCase}Service,${moduleInCamelCase}Repository } = ${moduleInCamelCase}Container.export();
+export { ${moduleInCamelCase}Controller, ${moduleInCamelCase}Service, ${moduleInCamelCase}Repository };
 `;
 }
 
