@@ -1,5 +1,3 @@
-# EXpressJS Base Source Apply DI With Inversify - Using Repository Pattern with TypeORM
-
 # ExpressJS-clean-basesource
 
 ### Author: haphuthinh
