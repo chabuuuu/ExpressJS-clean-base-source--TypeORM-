@@ -1,5 +1,6 @@
 import { ErrorCode } from '@/enums/error-code.enums';
 import BaseError from '@/utils/error/base.error';
+import DefinedError from '@/utils/error/defined.error';
 import { NextFunction, Request, Response } from 'express';
 import { getReasonPhrase, ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { QueryFailedError, TypeORMError } from 'typeorm';
@@ -17,6 +18,20 @@ export const globalErrorHanlder = (error: any, req: Request, res: Response, next
   if (error instanceof BaseError) {
     switch (error.code) {
       case ErrorCode.VALIDATION_ERROR:
+        return res.status(400).send({
+          status: 'BAD_REQUEST',
+          code: 400,
+          success: false,
+          message: 'Bad Request',
+          data: null,
+          errors: {
+            code: error.code,
+            msg: error.msg,
+            data: error.data,
+            validateError: error.validateError
+          }
+        });
+
         return res.send_badRequest('Validation Error', error);
       default:
         return res.status(error.httpStatus ? error.httpStatus : 500).send({
@@ -28,10 +43,27 @@ export const globalErrorHanlder = (error: any, req: Request, res: Response, next
           errors: {
             code: error.code,
             msg: error.msg,
-            data: error.data
+            data: error.data,
+            validateError: null
           }
         });
     }
+  }
+
+  if (error instanceof DefinedError) {
+    return res.status(error.httpStatus ? error.httpStatus : 500).send({
+      status: error.httpStatus ? StatusCodes[error.httpStatus] : 'INTERNAL_SERVER_ERROR',
+      code: error.httpStatus ? error.httpStatus : 500,
+      success: false,
+      message: error.httpStatus ? getReasonPhrase(error.httpStatus) : ReasonPhrases.INTERNAL_SERVER_ERROR,
+      data: null,
+      errors: {
+        code: error.code,
+        msg: error.msg,
+        data: error.data,
+        validateError: null
+      }
+    });
   }
 
   if (error instanceof TypeORMError) {
